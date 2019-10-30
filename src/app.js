@@ -1,9 +1,11 @@
-const getData = async (url) => {
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
-};
+import { http } from './http';
+import { ui } from './ui';
 
-getData('http://api.icndb.com/jokes/random/10')
-.then(data => console.log(data))
-.catch(err => console.log(err))
+// Get posts on DOM load
+addEventListener('DOMContentLoaded', getPosts);
+
+function getPosts(){
+  http.get("http://localhost:3000/posts")
+  .then(data => ui.showPosts(data))
+  .catch(err => console.log(err));
+}
