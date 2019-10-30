@@ -12,8 +12,8 @@ class EasyHttp {
     // HTTP GET REQUEST
     async get(url){
         const response = await fetch(url);
-        const resDate = await response.json();
-        return resDate;
+        const resData = await response.json();
+        return resData;
     }
 
     // HTTP POST REQUEST
