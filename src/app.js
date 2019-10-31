@@ -10,6 +10,8 @@ document.querySelector(".post-submit").addEventListener('click', submitData);
 // Delete Post
 document.querySelector("#posts").addEventListener('click', deletePost);
 
+//Enable edit state eventlisterner
+document.querySelector('#posts').addEventListener('click', enableEdit);
 
 
 function getPosts(){
@@ -37,17 +39,35 @@ function submitData(){
 }
 
 function deletePost(e){
-  e.prevenDefault();
+  e.preventDefault();
   if (e.target.parentElement.classList.contains('delete')) {
     const id = e.target.parentElement.dataset.id;
     if (confirm("Are you Sure?")) {
       http.delete(`http://localhost:3000/posts/${id}`)
         .then(data => {
-          showAlert("Post removed", "alert alert-success");
+          ui.showAlert("Post removed", "alert alert-success");
           getPosts();
         })
         .catch(err => console.log(err));
     }
+  }
+}
+
+function enableEdit(e){
+  e.preventDefault();
+  if (e.target.parentElement.classList.contains('edit')) {
+    const id = e.target.parentElement.dataset.id;
+    const title = e.target.parentElement.previousElementSibling.previousElementSibling.textContent;
+    const body = e.target.parentElement.previousElementSibling.textContent;
+
+    const data = {
+      id,
+      title,
+      body
+    }
+    
+    // FIll form with current post
+    ui.fillForm(data);
   }
 }
 
