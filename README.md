@@ -5,9 +5,6 @@ Micropost is a CRUD(Create, Read, Update, Delete) web application built with Jav
 The datas are been stored with json server
 https://github.com/typicode/json-server
 
-### Babe & Webpack
-
-
 
 ### Author 
 Abdulfatai Suleiman
