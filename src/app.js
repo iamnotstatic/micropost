@@ -4,14 +4,17 @@ import { ui } from './ui';
 // Get posts on DOM load
 addEventListener('DOMContentLoaded', getPosts);
 
-// Get form Data
+// Listen for Get form Data
 document.querySelector(".post-submit").addEventListener('click', submitData);
 
-// Delete Post
+// Listen for Delete Post
 document.querySelector("#posts").addEventListener('click', deletePost);
 
-//Enable edit state eventlisterner
+// Listen for Enable edit state
 document.querySelector('#posts').addEventListener('click', enableEdit);
+
+// Listen for cancel
+document.querySelector('.card-form').addEventListener('click', cancelEdit);
 
 
 function getPosts(){
@@ -23,19 +26,40 @@ function getPosts(){
 function submitData(){
   const title = document.querySelector('#title').value;
   const body = document.querySelector('#body').value;
+  const id = document.querySelector('#id').value;
 
   const data = {
     title,
     body
   }
 
-  http.post("http://localhost:3000/posts", data)
-    .then(data => {
-      ui.showAlert("Post added", "alert alert-success");
-      ui.clearFields();
-      getPosts();
-    })
-    .catch(err => console.log(err));
+  // validate input
+  if (title === '' || body === '') {
+    ui.showAlert("All fields are required", "alert alert-danger");
+  } else {
+    // Check for ID
+    if (id === '') {
+      // Create Post
+      http.post("http://localhost:3000/posts", data)
+      .then(data => {
+        ui.showAlert("Post added", "alert alert-success");
+        ui.clearFields();
+        getPosts();
+      })
+      .catch(err => console.log(err));
+    } else {
+      // Update Post
+      http.put(`http://localhost:3000/posts/${id}`, data)
+      .then(data => {
+        ui.showAlert("Post updated", "alert alert-success");
+        ui.changeFormState();
+        getPosts();
+      })
+
+    }
+  
+  }
+
 }
 
 function deletePost(e){
@@ -68,6 +92,14 @@ function enableEdit(e){
     
     // FIll form with current post
     ui.fillForm(data);
+  }
+}
+
+// Cancel Edit state
+function cancelEdit(e){
+  e.preventDefault();
+  if (e.target.classList.contains('post-cancel')) {
+    ui.changeFormState("add");
   }
 }
 
